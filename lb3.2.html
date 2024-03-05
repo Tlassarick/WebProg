@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .row {
+            display: flex;
+            flex-basis: 100%;
+            justify-content: space-between;
+            margin: 10px;
+            margin-top: 10px;
+        }
+
+        .square {
+            width: calc(25% - 10px);
+            height: 200px;
+            background-color: #ccc;
+            border: 2px solid black;
+            padding: 20px;
+            margin: 10px;
+            box-sizing: border-box;
+        }
+
+        .square img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .square h2 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .square p {
+            font-size: 0.8em;
+            margin: 0;
+        }
+
+        .square span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container"></div>
+    <script>
+        const container = document.querySelector('.container');
+
+        // Виконуємо запит до сервера
+        fetch('https://jsonplaceholder.typicode.com/users')
+            .then(response => response.json())
+            .then(users => {
+                // Перебираємо кожного користувача і виводимо його дані на сторінку
+                for (let i = 0; i < users.length; i += 4) {
+                    const row = document.createElement('div');
+                    row.classList.add('row');
+                    for (let j = i; j < i + 4 && j < users.length; j++) {
+                        const user = users[j];
+                        const square = document.createElement('div');
+                        square.classList.add('square');
+
+                        const img = document.createElement('img');
+                        img.src = 'user-avatar.jpg';
+                        img.alt = 'Avatar';
+
+                        const h2 = document.createElement('h2');
+                        h2.textContent = user.name;
+
+                        const email = document.createElement('p');
+                        email.innerHTML = `<span>Email:</span> ${user.email}`;
+
+                        const address = document.createElement('p');
+                        address.innerHTML = `<span>Адреса:</span> ${user.address.street}, ${user.address.suite}, ${user.address.city}, ${user.address.zipcode}`;
+
+                        const phone = document.createElement('p');
+                        phone.innerHTML = `<span>Телефон:</span> ${user.phone}`;
+
+                        const website = document.createElement('p');
+                        website.innerHTML = `<span>Веб-сайт:</span> <a href="http://${user.website}" target="_blank">${user.website}</a>;`
+
+                        square.appendChild(img);
+                        square.appendChild(h2);
+                        square.appendChild(email);
+                        square.appendChild(address);
+                        square.appendChild(phone);
+                        square.appendChild(website);
+
+                        row.appendChild(square);
+                    }
+                    container.appendChild(row);
+                }
+            })
+                                .catch(error => console.error(error));
+                        </script>
+</body>
+
+</html>
